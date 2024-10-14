@@ -2,7 +2,7 @@ import { Contract } from "ethers"
 import { BrowserProvider } from "ethers"
 import { createContext, useEffect, useState } from "react"
 import { CONTRACT_ADDRESS } from "./constants";
-import DEPLOY_ABI from "../artifacts/contracts/EcoloSystem.sol/EcoRewardSystem.json";
+import DEPLOY_ABI from "../artifacts/contracts/EcoRewardSystem.sol/EcoRewardSystem.json";
 
 const defaultProvider = {
 
@@ -20,10 +20,6 @@ const defaultProvider = {
   const AccountContext = createContext(defaultProvider)
 
   const  AccountProvider =({children})=>{
-
-
-    // const [provider, setProvider] = useState(new BrowserProvider(window.ethereum))
-    // const [signer, setSigner] = useState( async() =>{ return  await provider.getSigner()})
 
     const [account, setAccount] = useState(defaultProvider.account)
     const [role, setRole] = useState(defaultProvider.role)

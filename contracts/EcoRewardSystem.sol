@@ -37,9 +37,7 @@ contract EcoRewardSystem {
         constructor() {
             admin = msg.sender;
         }
-    uint public rewardAmount = 0.00005 ether; // Montant de la récompense pour chaque votant (exemple : 1.5 ether)
-    uint public rewardAmountVoters = 0.00002 ether; // Montant de la récompense pour chaque votant (exemple : 1 ether)
-    
+
     // Fonction pour proposer une action écologique
     function proposeAction(string memory description , address payable _address) public {
         actionCounter++;
@@ -78,7 +76,9 @@ contract EcoRewardSystem {
     // Fonction pour rémunérer les votants et le proposeur après validation
     function payVotersAndProposer(uint actionId) public {
         require(actions[actionId].validated, "Action not yet validated");
-        
+        uint  rewardAmount = 0.00005 ether; // Montant de la récompense pour chaque votant (exemple : 1.5 ether)
+        uint  rewardAmountVoters = 0.00002 ether; // Montant de la récompense pour chaque votant (exemple : 1 ether)
+    
         uint totalAmount = rewardAmount + rewardAmountVoters * (actions[actionId].voters.length + 1); // Total à payer (votants + proposeur)
 
         require(address(this).balance >= totalAmount , "Solde insuffisant" );
@@ -108,11 +108,13 @@ contract EcoRewardSystem {
     // Fonction pour obtenir les détails d'une action par son identifiant
     function ActionsByActionId(uint actionId) public view returns (Action memory) {
         require(actions[actionId].id != 0, "Action does not exist"); // Vérifier l'existence de l'action
+        
         return actions[actionId];
     }
 
     function VotesByActionId(uint actionId) public view returns (address[] memory) {
         require(actions[actionId].id != 0, "Action does not exist"); // Vérifier l'existence de l'action
+       
         return actions[actionId].voters; // Retourner la liste des votants pour l'action
     }
 

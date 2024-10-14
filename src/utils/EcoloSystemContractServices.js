@@ -2,12 +2,14 @@
 export const proposeAction = async (provider,contract, address_proposer ,description) => {
     if (contract && address_proposer && description) {
         try {
-            const signer = provider.getSigner();
-            const tx = await contract.connect(signer).proposeAction(description, address_proposer);
-            await tx.wait();
+
+           const tx = await contract.proposeAction(description, address_proposer);
+           await tx.wait();
            
         } catch (error) {
-            console.error("Error proposing action:", error);
+            console.error("Error proposing action -----:", error);
+
+            throw new Error(error)
         } 
     } else {
         alert("Please provide a description for the action.");
@@ -46,9 +48,10 @@ export const getActionDetails = async (contract, actionId) => {
     if (!contract) return;
 
     try {
-        const actionDetails = await contract.ActionsParActionId(actionId);
-
-        return actionDetails 
+        console.log('id',actionId )
+        const actionDetails = await contract.actions        
+    
+        return  actionDetails
     } catch (error) {
         console.error("Erreur lors de la récupération des détails de l'action:", error);
     }
@@ -72,7 +75,8 @@ export const getAllActions = async (contract) => {
     if (!contract) return;
 
     try {
-        const actionsList = await contract.tousListDActions();
+        const actionsList = await contract.AllActionsList();
+        console.log(actionsList)
         return actionsList 
     } catch (error) {
         console.error("Erreur lors de la récupération des actions:", error);

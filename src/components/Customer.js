@@ -1,17 +1,32 @@
-import React from 'react'
-import ContractInfo from './ContractInfo'
-import ContractActions from './ContractActions'
+import React, { useState } from 'react'
+
 import { useAccount } from '../hooks/useAccount'
 import AppAppBar from './AppBar'
-import { AppBar, Container, Divider, Grid, Typography } from '@mui/material'
+import { Container, Divider, Grid, Typography } from '@mui/material'
 import CardSupport from './Card/CardEco'
 import CardMobilite from './Card/CardMobilite'
 import CardReboissement from './Card/CardReboissement'
 import CardRecyclage from './Card/CardRecyclage'
+import { getActionDetails, getAllActions } from '../utils/EcoloSystemContractServices'
 
 function Customer() {
-  const {account} = useAccount()
+  const {account, contract} = useAccount()
+
+  const [actions , setActions] = useState([])
+
   console.log('mmy account id', account)
+
+  const fetchActions = async () => {
+    if (contract) {
+         getActionDetails(contract, '1').then((result)=>{
+        // setActions(actionList);
+        console.log(result)
+         }) // Assurez-vous que cette fonction est définie
+        
+
+    }
+};
+
 
   //   useEffect(() => {
 //     const handleAccountChanged = (newAccounts) =>
@@ -64,6 +79,16 @@ function Customer() {
       <Typography variant="h2"  sx={{textAlign: 'center' , m: 3}}> Historique Et Etats des Actions </Typography>
       <Divider sx={{m: 3}}/>
       <Grid container  spacing={5} >
+      <button onClick={fetchActions}>Fetch Actions</button>
+
+      {/* <h2>Existing Actions</h2>
+            <ul>
+                {actions.map((action, index) => (
+                    <li key={index}>
+                        <p>{action.description} (Votes: {action.voteCount})</p>
+                    </li>
+                ))}
+            </ul> */}
           <Grid item  xs={6}>
                 <CardSupport/>
               </Grid>

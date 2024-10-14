@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 import { useForm, Controller } from 'react-hook-form'
 import { useAccount } from '../../hooks/useAccount'
 import { declareAction } from '../../utils/contractServices'
+import { proposeAction } from '../../utils/EcoloSystemContractServices'
 
 
 
@@ -33,7 +34,7 @@ const CardRecyclage = () => {
       const [show, setShow] = useState(false)
       const [languages, setLanguages] = useState([])
 
-      const {contract} = useAccount()
+      const {provider,contract} = useAccount()
 
     // ** Hook
     const {
@@ -41,12 +42,23 @@ const CardRecyclage = () => {
       handleSubmit,
       formState: { errors }
     } = useForm({ defaultValues })
-  
-
-  
+    
     const onSubmit = async (data) => {
       setLoading(true)
-    
+      try {
+        proposeAction(provider,contract,data.addresse, `${data?.description +'-' + data.nombre}`).then((result)=>{
+          setLoading(false)
+          console.log('result', result)
+          alert('Action déclarée avec succès !');
+        }).catch((err)=>{
+          console.log(err)
+          setLoading(false)
+
+        })
+        } catch (error) {
+            alert('Erreur lors de la déclaration de l\'action.');
+            setLoading(false)
+        }
   }
 
   return (

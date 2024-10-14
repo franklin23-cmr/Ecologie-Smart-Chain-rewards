@@ -3,9 +3,9 @@
 
 const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 
-module.exports = buildModule("EcologicalRewardsModule", (m) => {
+module.exports = buildModule("EcoRewardSystemModule", (m) => {
 
-  const ecologicalRewards = m.contract("EcoRewardSystem", [], {});
+  const ecoRewardSystem = m.contract("EcoRewardSystem", [], {});
 
-  return { ecologicalRewards };
+  return { ecoRewardSystem };
 });
