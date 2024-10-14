@@ -48,9 +48,19 @@ const columns = [
         headerName: 'Actions',
         renderCell: params => {
           return (
-            <Button size='small' variant='outlined' color='secondary' onClick={()=>{HandlevoteForAction(params)}} >
-              voter cette action 
+            <>
+            {params.row.validated ? <>
+              <Button size='small' variant='contained' color='success' disabled >
+              Action Valide 
             </Button>
+            </> : <>
+            
+              <Button size='small' variant='outlined' color='secondary' onClick={()=>{HandlevoteForAction(params)}} >
+                voter cette action 
+            </Button></>}
+          
+            </>
+
           )
         }
       }

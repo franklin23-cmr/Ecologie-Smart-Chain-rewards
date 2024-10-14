@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import toast from 'react-hot-toast';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -33,10 +34,14 @@ export default function AppAppBar({contrat_adresse}) {
     setOpen(newOpen);
   };
 
+  const handleCopy=(adr)=>{
+    navigator.clipboard.writeText(adr)
+    toast('copied!', { icon: '👏' })
+  }
   return (
     <AppBar >
       <Container maxWidth="lg">
-        <Button sx={{color: 'white'}}>adresse du contrat: {contrat_adresse}</Button>
+        <Button sx={{color: 'white'}} onClick={()=>{handleCopy(contrat_adresse)}} >adresse du compte courant: {contrat_adresse}</Button>
       </Container>
     </AppBar>
   );
