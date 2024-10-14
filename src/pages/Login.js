@@ -38,23 +38,6 @@ function Login() {
             Connect
             </Typography>
 
-            <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={role}
-                    label="Role"
-                    onChange={handleChange}
-                >
-                    <MenuItem value="customer">customer</MenuItem>
-                    <MenuItem value="partner">partner</MenuItem>
-                    <MenuItem value="partner">admin</MenuItem>
-                </Select>
-                </FormControl>
-            </Box>
-
             <ToastContainer />
             <ConnectWalletButton setAccount={setAccount} role={role} />
         </Box>
