@@ -4,6 +4,7 @@ import { createContext, useEffect, useState } from "react"
 import { CONTRACT_ADDRESS } from "./constants";
 import DEPLOY_ABI from "../artifacts/contracts/EcoRewardSystem.sol/EcoRewardSystem.json";
 
+
 const defaultProvider = {
 
     contract: null,
@@ -11,6 +12,7 @@ const defaultProvider = {
     role: null,
     loading: true,
     isConnect: false,
+    decoder: null ,
     setAccount: () => null,
     setLoading: () => Boolean,
     login: () => Promise.resolve(),
@@ -28,6 +30,7 @@ const defaultProvider = {
     const [isConnect , setIsConnect] = useState(defaultProvider.isConnect)
     const [signer, setSigner]= useState(defaultProvider.signer)
     const [provider, setProvider]= useState(defaultProvider.provider)
+    const [decoder , setDecoder] = useState(defaultProvider.decoder)
 
    useEffect(()=>{
     const storedAdress = window.localStorage.getItem('address')
@@ -42,6 +45,7 @@ const defaultProvider = {
           const signer = await provider.getSigner();
           const contract = new Contract(CONTRACT_ADDRESS, DEPLOY_ABI.abi, signer);
           const accounts = await provider.send("eth_requestAccounts", []);
+   
           setLoading(false)
 
           console.log(provider)
@@ -82,7 +86,7 @@ const defaultProvider = {
           const sig= await prov.getSigner();
           const cntrct = new Contract(CONTRACT_ADDRESS, DEPLOY_ABI.abi, sig);
           const accounts = await prov.send("eth_requestAccounts", []);
-         
+
           if(accounts[0]){
 
             setRole(role)

@@ -49,8 +49,7 @@ export const getActionDetails = async (contract, actionId) => {
 
     try {
         console.log('id',actionId )
-        const actionDetails = await contract.actions        
-    
+        const actionDetails = await contract.ActionsByActionId(actionId)        
         return  actionDetails
     } catch (error) {
         console.error("Erreur lors de la récupération des détails de l'action:", error);
@@ -76,7 +75,6 @@ export const getAllActions = async (contract) => {
 
     try {
         const actionsList = await contract.AllActionsList();
-        console.log(actionsList)
         return actionsList 
     } catch (error) {
         console.error("Erreur lors de la récupération des actions:", error);

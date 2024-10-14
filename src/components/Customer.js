@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { useAccount } from '../hooks/useAccount'
 import AppAppBar from './AppBar'
-import { Container, Divider, Grid, Typography } from '@mui/material'
+import { Button, Container, Divider, Grid, Typography } from '@mui/material'
 import CardSupport from './Card/CardEco'
 import CardMobilite from './Card/CardMobilite'
 import CardReboissement from './Card/CardReboissement'
@@ -18,12 +18,10 @@ function Customer() {
 
   const fetchActions = async () => {
     if (contract) {
-         getActionDetails(contract, '1').then((result)=>{
-        // setActions(actionList);
-        console.log(result)
-         }) // Assurez-vous que cette fonction est définie
-        
-
+        //  const actions =  await getActionDetails(contract, '1')
+        const actions =  await getAllActions(contract)
+        setActions(actions)
+        console.log('actions', actions)
     }
 };
 
@@ -42,16 +40,16 @@ function Customer() {
   return (
     <div >   
       <AppAppBar  contrat_adresse={account}/>
-      <Container  sx={{mt: 20 }}>
+      {/* <Container  sx={{mt: 20 }}>
       <Grid container  spacing={5} justifyContent='center' justifyItems="center" >
               <Grid item  xs={6}>
                 <CardSupport/>
               </Grid>
           </Grid>
-    </Container>
+    </Container> */}
 
       <Container >
-      <Typography variant="h2"  sx={{textAlign: 'center' , m: 3}}> Nos actions ecologiques </Typography>
+      <Typography variant="h2"  sx={{textAlign: 'center' , m: 5}}> Nos actions ecologiques </Typography>
 
         <Grid container spacing={2}>
         <Grid item xs={4}>
@@ -77,18 +75,17 @@ function Customer() {
       <Container>
       <Divider sx={{m: 3}}/>
       <Typography variant="h2"  sx={{textAlign: 'center' , m: 3}}> Historique Et Etats des Actions </Typography>
+      <Button variant='contained' sx={{}} onClick={fetchActions}>Fetch Actions</Button>
       <Divider sx={{m: 3}}/>
       <Grid container  spacing={5} >
-      <button onClick={fetchActions}>Fetch Actions</button>
-
-      {/* <h2>Existing Actions</h2>
+      <h2>Existing Actions</h2>
             <ul>
                 {actions.map((action, index) => (
                     <li key={index}>
                         <p>{action.description} (Votes: {action.voteCount})</p>
                     </li>
                 ))}
-            </ul> */}
+            </ul>
           <Grid item  xs={6}>
                 <CardSupport/>
               </Grid>

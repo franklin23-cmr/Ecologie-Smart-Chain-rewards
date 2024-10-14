@@ -6,7 +6,11 @@ import CardContent from '@mui/material/CardContent'
 
 const CardMobilite = () => {
   return (
-    <Card>
+    <Card sx={{
+     opacity: 0.6,
+     pointerEvents: "none",
+    }}
+      >
       <CardContent sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
        
         <Typography variant='h6' sx={{ mb: 2 }}>
