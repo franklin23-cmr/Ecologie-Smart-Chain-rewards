@@ -19,7 +19,9 @@ function Customer() {
     if (contract) {
         //  const actions =  await getActionDetails(contract, '1')
         const actions =  await getAllActions(contract)
-        console.log('action wie', actions)
+        console.log('action ', actions)
+
+        console.log('action target', actions.target)
         setActions(actions)
     }
 };
@@ -30,14 +32,15 @@ const extractDataFromProxy = (actions) => {
       id: index + 1,                           
       proposer: action?.proposer,              
       description: action?.description,              
-      voteCount: action?.voteCount,                   
+      voteCount: Number(action?.voteCount),                    
       validated: action?.validated,
     }));
   
 
-return data
+return data || []
 };
 
+console.log('actions', actions[0])
 
 //   useEffect(() => {
 //     const handleAccountChanged = (newAccounts) =>
@@ -78,17 +81,7 @@ return data
       <h2>Existing Actions</h2>
       <Button variant='contained' sx={{}} onClick={fetchActions}>Refresh Actions</Button>
 
-     <>             
-    <ul>
-      {actions.map((action, index) => (
-          <li key={index}>
-             {console.log('action', action)}
-             <p>{action.description} (Votes: {action.voteCount})</p>
-        </li>
-              ))}
-          </ul> 
-          </>
-        {/* <HistoryActionsTable rows={extractDataFromProxy(actions)}></HistoryActionsTable> */}
+        <HistoryActionsTable rows={extractDataFromProxy(actions)}></HistoryActionsTable>
     </Container>
 
   </div>

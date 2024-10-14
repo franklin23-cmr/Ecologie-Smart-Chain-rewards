@@ -1,145 +1,68 @@
-// ** React Imports
-import { useEffect, useState } from 'react'
 
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import { DataGrid } from '@mui/x-data-grid'
-
-// ** Third Party Components
-import toast from 'react-hot-toast'
+import React, { useState } from 'react'
+import { DataGrid } from '@mui/x-data-grid';
+import Paper from '@mui/material/Paper';
+import { Button } from '@mui/material';
+import { getAllActions, voteForAction } from '../../utils/EcoloSystemContractServices';
+import { useAccount } from '../../hooks/useAccount';
+import toast from 'react-hot-toast';
 
 
-const statusObj = {
-  1: { title: 'current', color: 'primary' },
-  2: { title: 'professional', color: 'success' },
-  3: { title: 'rejected', color: 'error' },
-  4: { title: 'resigned', color: 'warning' },
-  5: { title: 'applied', color: 'info' }
-}
+export default function HistoryActions({rows}) {
+   
+    const [hideNameColumn, setHideNameColumn] = React.useState(false)
+    const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+    const {contract, account} = useAccount()
 
-// ** Full Name Getter
-const getFullName = params =>
-  toast(
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-      
-        </Typography>
-      </Box>
-    </Box>
-  )
+const HandlevoteForAction = (params) =>{
+    try {
+        voteForAction(contract, params?.row?.id , account).then(async ()=>{
+            await getAllActions(contract)
+            toast.success(`Vote ${params.id} enregistré avec succès !`)
+        }).catch((error)=>{
+            throw new Error(error)
+        })
+    } catch (error) {
+        throw new Error(error)
+    }
+} 
 
-const HistoryActionsTable = ({rows}) => {
-  // ** States
-  const [hideNameColumn, setHideNameColumn] = useState(false)
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
-
-  console.log(rows[0])
-  const columns = [
+const columns = [
+    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'proposer', headerName: 'addresse du client', width: 260 },
+    { field: 'description', headerName: 'description', width: 260 },
     {
-        flex: 0.08,
-        field: 'id',
-        minWidth: 30,
-        headerName: 'id',
-        renderCell: params => (
-          <Typography variant='body2' sx={{ color: 'text.primary' }}>
-            {console.log(params)}
-          </Typography>
-        )
-      },
-    {
-      flex: 0.15,
-      minWidth: 100,
-      field: 'description',
-      headerName: 'description',
-      renderCell: params => {
-        console.log(params)
-
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              </Typography>
-              <Typography noWrap variant='caption'>
-              </Typography>
-            </Box>
-          </Box>
-        )
-      }
-    },
-    {
-      flex: 0.175,
-      minWidth: 100,
-      headerName: 'proposer',
-      field: 'proposer',
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.15,
-      minWidth: 110,
       field: 'voteCount',
       headerName: 'voteCount',
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params?.description}
-        </Typography>
-      )
+      width: 90,
     },
-
     {
-      flex: 0.2,
-      minWidth: 140,
-      field: 'voters',
-      headerName: 'voters',
-      renderCell: params => {
-        return (
-            <>
-            {params?.voteCount}
-            </>
-        )
+      field: 'validated',
+      headerName: 'validatede',
+      sortable: false,
+      width: 160,  },
+      {
+        flex: 0.125,
+        minWidth: 140,
+        field: 'actions',
+        headerName: 'Actions',
+        renderCell: params => {
+          return (
+            <Button size='small' variant='outlined' color='secondary' onClick={()=>{HandlevoteForAction(params)}} >
+              voter cette action 
+            </Button>
+          )
+        }
       }
-    },
-    {
-        flex: 0.15,
-        minWidth: 110,
-        field: 'validated',
-        headerName: 'validated',
-        renderCell: params => (
-          <Typography variant='body2' sx={{ color: 'text.primary' }}>
-            {params.row.salary}
-          </Typography>
-        )
-      },
+  ];
   
-    {
-      flex: 0.125,
-      minWidth: 140,
-      field: 'actions',
-      headerName: 'Actions',
-      renderCell: params => {
-        return (
-          <Button size='small' variant='outlined' color='secondary' onClick={() => getFullName(params)}>
-            voters
-          </Button>
-        )
-      }
-    }
-  ]
 
   return (
-    <Card>
+    <Paper sx={{ height: 400, width: '100%' }}>
 
-      <DataGrid
+    <DataGrid
         autoHeight
-        rows={[]}
+        rows={rows}
         columns={columns}
         disableRowSelectionOnClick
         pageSizeOptions={[7, 10, 25, 50]}
@@ -147,8 +70,6 @@ const HistoryActionsTable = ({rows}) => {
         onPaginationModelChange={setPaginationModel}
         initialState={{ columns: { columnVisibilityModel: { full_name: hideNameColumn } } }}
       />
-    </Card>
-  )
+    </Paper>
+  );
 }
-
-export default HistoryActionsTable

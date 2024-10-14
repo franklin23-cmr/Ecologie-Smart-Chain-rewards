@@ -25,7 +25,7 @@ export const voteForAction = async (contract, actionId,userAddress) => {
             alert('Vote enregistré avec succès !');
         } catch (error) {
             console.error(error);
-            alert('Erreur lors du vote.');
+            alert(`Erreur lors du vote, ${error}`);
         }
  
 };
