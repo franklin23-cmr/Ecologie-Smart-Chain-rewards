@@ -40,7 +40,8 @@ const columns = [
       field: 'validated',
       headerName: 'validatede',
       sortable: false,
-      width: 160,  },
+      width: 160,  
+    },
       {
         flex: 0.125,
         minWidth: 140,
@@ -63,7 +64,9 @@ const columns = [
 
           )
         }
-      }
+      },
+
+      
   ];
   
 
