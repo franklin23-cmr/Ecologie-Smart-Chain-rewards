@@ -348,7 +348,7 @@ contract EcoRewardSystem {
 }
 ```
 
-Code github : 
+Projet complet github : https://github.com/franklin23-cmr/Ecologie-Smart-Chain-rewards.git  
 ### Présentation du projet 
 
 cette application se concentre sur la création de composants dynamiques et réactifs qui permettent aux utilisateurs de proposer des actions écologiques, voter pour ces actions, et suivre les récompenses gagnées Green Coin  (comme des tokens). 
@@ -409,7 +409,15 @@ Les services permettent de **connecter la partie front-end React avec le back-en
 
 2. présentation de la Dapps
 
-3.  compilation et déploiement
+![alt text](<WhatsApp Image 2024-10-15 à 09.45.47_c703111b.jpg>)
+![alt text](<WhatsApp Image 2024-10-15 à 09.45.47_792165cb.jpg>)
+![alt text](<WhatsApp Image 2024-10-15 à 09.45.47_998eb194.jpg>)
+![alt text](<WhatsApp Image 2024-10-15 à 09.45.48_eccead8a.jpg>)
+![alt text](<WhatsApp Image 2024-10-15 à 09.56.12_66abdbb9.jpg>)
+![alt text](image-1.png)
+![alt text](image.png)
+
+1.  compilation et déploiement
 
 - compilation
 ```
