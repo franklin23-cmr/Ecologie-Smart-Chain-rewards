@@ -419,9 +419,14 @@ Les services permettent de **connecter la partie front-end React avec le back-en
 
 1.  compilation et déploiement
 
+
 - compilation
 ```
 npx hardhat compile
+```
+- Lancer le node hardhat (sur un autre shell) le laisser durant tous execution de votre Dapps
+```
+npx hardhat node
 ```
 - déploiement
 ```
