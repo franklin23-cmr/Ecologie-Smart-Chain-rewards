@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
-import { getAllActions, voteForAction } from '../../utils/EcoloSystemContractServices';
+import { getAllActions, payVoters, voteForAction } from '../../utils/EcoloSystemContractServices';
 import { useAccount } from '../../hooks/useAccount';
 import toast from 'react-hot-toast';
 
@@ -13,7 +13,7 @@ export default function HistoryActions({rows}) {
     const [hideNameColumn, setHideNameColumn] = React.useState(false)
     const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
     const {contract, account} = useAccount()
-
+   const [reclaim , setReclaim] = useState(false)
 const HandlevoteForAction = (params) =>{
     try {
         voteForAction(contract, params?.row?.id , account).then(async ()=>{
@@ -27,10 +27,24 @@ const HandlevoteForAction = (params) =>{
     }
 } 
 
+const ReclaimGreenCoin = (params) =>{
+  try {
+    payVoters(contract, params?.row?.id ,params?.row?.greencoin || 0,account).then(async ()=>{
+      setReclaim(true)  
+      await getAllActions(contract)
+        toast.success(`Vote ${params.id} enregistré avec succès !`)
+    }).catch((error)=>{
+        throw new Error(error)
+    })
+} catch (error) {
+    throw new Error(error)
+}
+}
+
 const columns = [
-    { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'proposer', headerName: 'addresse du client', width: 260 },
-    { field: 'description', headerName: 'description', width: 260 },
+    { field: 'id', headerName: 'ID', width: 60 },
+    { field: 'proposer', headerName: 'addresse du client', width: 100 },
+    { field: 'description', headerName: 'description', width: 200 },
     {
       field: 'voteCount',
       headerName: 'voteCount',
@@ -40,38 +54,67 @@ const columns = [
       field: 'validated',
       headerName: 'validatede',
       sortable: false,
-      width: 160,  
+      width: 130,  
     },
-      {
-        flex: 0.125,
-        minWidth: 140,
-        field: 'actions',
-        headerName: 'Actions',
-        renderCell: params => {
-          return (
-            <>
-            {params.row.validated ? <>
-              <Button size='small' variant='contained' color='success' disabled >
-              Action Valide 
-            </Button>
-            </> : <>
-            
-              <Button size='small' variant='outlined' color='secondary' onClick={()=>{HandlevoteForAction(params)}} >
-                voter cette action 
-            </Button></>}
+    {
+      field: 'greencoin',
+      headerName: 'token green coin',
+      sortable: false,
+      width: 100,  
+    },
+
+    {
+      flex: 0.001,
+      minWidth: 80,
+      field: 'actions1',
+      headerName: ' votez',
+      renderCell: params => {
+        return (
+          <>
+          {params.row.validated ? <>
+            <Button size='small' variant='contained' color='success' disabled >
+            Action Valide 
+          </Button>
+          </> : <>
           
-            </>
+            <Button size='small' variant='outlined' color='secondary' onClick={()=>{HandlevoteForAction(params)}} >
+              voter cette action 
+          </Button></>
+          }
+        
+          </>
 
-          )
-        }
-      },
+        )
+      }
+    },
 
+    {
+      flex: 0.001,
+      minWidth: 10,
+      field: 'actions2',
+      headerName: 'Reclamez',
+      renderCell: params => {
+        return (
+          <>
+          {params.row.validated && params.row.voteCount >=3 ? 
+          <Button disabled={reclaim} size='small' variant='outlined' color='secondary'  onClick={()=>{ReclaimGreenCoin(params)}}>
+            Reclamer ces Green Coin
+          </Button> : 
+          <Button disabled>
+            Reclamer ces Green Coin
+          </Button>
+          }
+        
+          </>
+
+        )
+      }
+    },
       
   ];
   
 
   return (
-    <Paper sx={{ height: 400, width: '100%' }}>
 
     <DataGrid
         autoHeight
@@ -83,6 +126,5 @@ const columns = [
         onPaginationModelChange={setPaginationModel}
         initialState={{ columns: { columnVisibilityModel: { full_name: hideNameColumn } } }}
       />
-    </Paper>
   );
 }

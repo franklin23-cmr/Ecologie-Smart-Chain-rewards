@@ -11,6 +11,7 @@ contract EcoRewardSystem {
         uint id;                          // Identifiant unique de l'action
         address payable proposer;                 // Adresse du proposeur de l'action
         string description;               // Description de l'action
+        uint rewardPoints;     // Points associés à l'action
         uint voteCount;                   // Nombre de votes reçus
         bool validated;                   // Indicateur de validation de l'action
         address[] voters;                 // Liste des votants pour cette action
@@ -21,6 +22,8 @@ contract EcoRewardSystem {
     // Compteur d'actions et seuil de votes pour validation
     uint public actionCounter = 0;
     uint constant public VOTE_THRESHOLD = 3;
+    mapping(address => uint) public rewardsBalance;        // Solde des tokens pour chaque utilisateur
+
     // Mapping des actions : actionId => Action
     mapping(uint => Action) public actions;
     
@@ -39,7 +42,7 @@ contract EcoRewardSystem {
         }
 
     // Fonction pour proposer une action écologique
-    function proposeAction(string memory description , address payable _address) public {
+    function proposeAction(string memory description , address payable _address , uint greencoin) public {
         actionCounter++;
         address[] memory emptyArray; // Initialize an empty array for voters
         
@@ -47,6 +50,7 @@ contract EcoRewardSystem {
             id: actionCounter,
             proposer: _address,
             description: description,
+            rewardPoints: greencoin,
             voteCount: 0,
             validated: false,
             voters: emptyArray
@@ -68,32 +72,19 @@ contract EcoRewardSystem {
         // Si l'action reçoit suffisamment de votes, elle est validée
         if (actions[actionId].voteCount >= VOTE_THRESHOLD) {
             actions[actionId].validated = true;
+            rewardsBalance[admin] += actions[actionId].rewardPoints; // Ajoute les points de récompense au solde de l'utilisateur
             emit ActionValidated(actionId, actions[actionId].description, actions[actionId].proposer);
         }
     }
 
  
     // Fonction pour rémunérer les votants et le proposeur après validation
-    function payVotersAndProposer(uint actionId) public {
+    function payVotersAndProposer(uint actionId , address _address , uint amount ) public {
         require(actions[actionId].validated, "Action not yet validated");
-        uint  rewardAmount = 0.00005 ether; // Montant de la récompense pour chaque votant (exemple : 1.5 ether)
-        uint  rewardAmountVoters = 0.00002 ether; // Montant de la récompense pour chaque votant (exemple : 1 ether)
-    
-        uint totalAmount = rewardAmount + rewardAmountVoters * (actions[actionId].voters.length + 1); // Total à payer (votants + proposeur)
 
-        require(address(this).balance >= totalAmount , "Solde insuffisant" );
+        rewardsBalance[admin] += amount;
+        rewardsBalance[_address] += amount / 2; // Déduit les tokens du solde
 
-        // Rémunérer le proposeur
-        payable(actions[actionId].proposer).transfer(rewardAmount);
-
-        emit VoterPaid(actions[actionId].proposer, rewardAmount);
-
-        // Rémunérer chaque votant
-        for (uint i = 0; i < actions[actionId].voters.length; i++) {
-            address voter = actions[actionId].voters[i];
-            payable(voter).transfer(rewardAmountVoters);
-            emit VoterPaid(voter, rewardAmountVoters);
-        }
     }
 
           // Fonction pour obtenir la liste de toutes les actions
@@ -137,6 +128,11 @@ contract EcoRewardSystem {
         }
         return result;
     }
+
+    // Fonction pour consulter le solde de récompenses
+        function checkRewardsBalance(address _address) public view returns (uint) {
+            return rewardsBalance[_address];
+        }
 
     // Permet au contrat de recevoir des ethers
     receive() external payable {}

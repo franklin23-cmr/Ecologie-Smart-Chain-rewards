@@ -23,7 +23,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const defaultValues = {
   addresse: '',
-  nombre: '',
+  nombre: 0,
   description: ''
 }
 
@@ -46,7 +46,7 @@ const CardRecyclage = () => {
     const onSubmit = async (data) => {
       setLoading(true)
       try {
-        proposeAction(provider,contract,data.addresse, `${data?.description +'-' + data.nombre}`).then((result)=>{
+        proposeAction(provider,contract,data.addresse, `${data?.description +'-' + data.nombre}` , data?.nombre * 2).then((result)=>{
           setLoading(false)
           console.log('result', result)
           alert('Action déclarée avec succès !');
@@ -121,13 +121,20 @@ const CardRecyclage = () => {
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
-                      value={value}
-                      label=' donne moi le poids de votre sac de recyclage'
-                      onChange={onChange}
-                      placeholder=' 1kg vaut 12 points'
-                      error={Boolean(errors.nombre)}
-                      aria-describedby='validation-async-last-name'
-                    />
+                    id="outlined-start-adornment"
+                    type='number'
+                    slotProps={{
+                      input: {
+                        startAdornment: <InputAdornment position="start">kg</InputAdornment>,
+                      },
+                    }}
+                    value={value}
+                    label='Precise le poids en kg de matiere recyclee'
+                    onChange={onChange}
+                    placeholder=' 1kg vaut 2 green coin '
+                    error={Boolean(errors.nombre)}
+                    aria-describedby='validation-async-last-name'
+                  />
                   )}
                 />
                 {errors.nombre && (

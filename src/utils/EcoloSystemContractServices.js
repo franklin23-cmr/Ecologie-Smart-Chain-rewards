@@ -1,9 +1,9 @@
 
-export const proposeAction = async (provider,contract, address_proposer ,description) => {
+export const proposeAction = async (provider,contract, address_proposer ,description ,greencoin) => {
     if (contract && address_proposer && description) {
         try {
 
-           const tx = await contract.proposeAction(description, address_proposer);
+           const tx = await contract.proposeAction(description, address_proposer,greencoin);
            await tx.wait();
            
         } catch (error) {
@@ -31,11 +31,11 @@ export const voteForAction = async (contract, actionId,userAddress) => {
 };
 
 
-export const payVoters = async (contract,actionId) => {
+export const payVoters = async (contract,actionId,amount,address) => {
     if (!contract) return;
 
     try {
-        const tx = await contract.payVotersAndProposer(actionId);
+        const tx = await contract.payVotersAndProposer(actionId, address, amount)
         await tx.wait(); // Attendre la confirmation de la transaction
         alert('Votants et proposeur rémunérés avec succès !');
     } catch (error) {
@@ -92,3 +92,15 @@ export const getAllActions = async (contract) => {
         console.error("Erreur lors de la récupération des actions votées:", error);
     }
 };
+
+
+export const checkRewardsBalance = async (contract , address) => {
+    try {
+
+      const balance = await contract.checkRewardsBalance(address);
+      return Number(balance)
+      
+    } catch (error) {
+      console.error("Erreur lors de la récupération du solde :", error);
+    }
+  };
