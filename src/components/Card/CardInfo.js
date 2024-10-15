@@ -14,7 +14,7 @@ const CardInfo = ({coin, handleRefrech}) => {
        Bonjour !
       </Typography>
       <Typography variant="h5" >
-        Green Coin Token : {coin}
+        Green Coin Token : {coin * 2}
       </Typography>
     </CardContent>
     <CardActions>
